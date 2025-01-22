@@ -6,6 +6,7 @@ import os
 import psycopg2
 import logging
 import datetime
+import shutil
 dt = datetime.datetime.today().strftime('%Y-%m-%d')
 logging.basicConfig(filename=f'cashLog_{dt}.log', filemode='w',
     format="%(asctime)s %(levelname)s %(message)s",
@@ -81,3 +82,20 @@ for i in files:
                 db1.rollback()  # Rollback not always necessary, as the error is expected
         else:
             logging.info(f'Запись с doc_id "{doc_id1}" уже есть в базе данных.')
+# Задайте пути к исходной и целевой папкам
+source_folder = config['path_data']['path from']
+destination_folder = config['path_data']['path to']
+
+# Убедитесь, что целевая папка существует; если нет, создайте её
+os.makedirs(destination_folder, exist_ok=True)
+
+# Перемещение только файлов с расширением .csv
+for filename in os.listdir(source_folder):
+    if filename.endswith('.csv'):  # Проверяем, является ли файл CSV
+        source_file = os.path.join(source_folder, filename)
+        destination_file = os.path.join(destination_folder, filename)
+
+        # Проверяем, является ли путь файлом (чтобы не перемещать папки)
+        if os.path.isfile(source_file):
+            shutil.move(source_file, destination_file)
+            logging.info(f'Файл "{filename}" был перемещён из "{source_folder}" в "{destination_folder}"')
