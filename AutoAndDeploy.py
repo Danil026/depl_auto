@@ -46,7 +46,7 @@ ds = pd.DataFrame(List_of_shop)
 for i in ds.iterrows():
     for n in range(1,i[1][1]+1):
         purchase_of_day = random.randint(40, 90)
-        nm = (i[1][0] +" Касса " + str(n))
+        nm = nm = (i[1][0] +" Касса " + str(n))+'-'+dt
         fake = Faker()
         doc_id = doc_id = generate_id_list(purchase_of_day, repeat_count_range=(1,8))
         item = [fake.random_element(elements=Shop_words.keys())for _ in range(purchase_of_day)]
